@@ -4,7 +4,7 @@ from player import Player
 
 def declare_winner(board, player):
     if board.has_won():
-        print('Player #{} wins!'.format(player))
+        print('Player {} wins!'.format(player))
     else:
         print('This game sucked...')
 
@@ -31,7 +31,7 @@ def start():
         else:
             print('Not a valid move')
 
-    declare_winner(board, winner)
     board.print_board()
+    declare_winner(board, winner)
 
 start()

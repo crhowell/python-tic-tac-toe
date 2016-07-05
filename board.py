@@ -30,6 +30,7 @@ class Board:
         return ''.join(map(lambda i: self.cells[i], indexes))
 
     def print_board(self):
+        print('\n-----------\n')
         for item in list(grouper(self.cells, 3)):
             print(*item, sep=' | ')
         print('\n------------\n')
