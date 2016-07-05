@@ -32,6 +32,10 @@ class Board:
         new_cells[cell] = token
         return Board(new_cells)
 
+    def print_moves_remaining(self):
+        moves = [move + 1 for move in range(0, self.size()) if self.pos(move) is self.EMPTY]
+        print('Moves Left: ', moves)
+
     def line(self, indexes):
         return ''.join(map(lambda i: self.cells[i], indexes))
 
