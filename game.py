@@ -14,7 +14,7 @@ def valid_move(board, move):
 
 
 def start():
-    players = [RandomAI('x'), RandomAI('o')]
+    players = [Player('x'), RandomAI('o')]
     board = Board()
     winner = None
     while True:
