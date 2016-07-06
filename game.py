@@ -19,7 +19,7 @@ def start():
     winner = None
     while True:
         board.print_board()
-        print('Moves Left: ', board.moves_remaining())
+        print('Available Moves: ', board.moves_remaining())
         player = players[0]
         move = player.move(board)
         if valid_move(board, move):

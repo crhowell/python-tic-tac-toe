@@ -22,7 +22,7 @@ You will be prompted with a console "game board". That looks similar to this:
 
 ---------- 
  
-Moves Left: [1,2,3,4,5,6,7,8,9]
+Available Moves: [1,2,3,4,5,6,7,8,9]
 x > 
 ```
 
