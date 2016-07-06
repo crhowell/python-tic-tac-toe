@@ -1,6 +1,6 @@
 from board import Board
-from player import Player, RandomAI
-
+from player import Player, RandomAI, OffensiveAI
+from datetime import datetime, timedelta
 
 def declare_winner(board, player):
     if board.has_won():
@@ -14,12 +14,13 @@ def valid_move(board, move):
 
 
 def start():
-    players = [Player('x'), RandomAI('o')]
+    players = [RandomAI('x'), OffensiveAI('o')]
     board = Board()
+
     winner = None
     while True:
-        board.print_board()
-        print('Available Moves: ', board.moves_remaining())
+        #board.print_board()
+        #print('Available Moves: ', board.moves_remaining())
         player = players[0]
         move = player.move(board)
         if valid_move(board, move):
@@ -29,9 +30,30 @@ def start():
                 break
             players.append(players.pop(0))
         else:
-            print('Not a valid move')
+            pass
+            #print('Not a valid move')
 
-    board.print_board()
+    #board.print_board()
     declare_winner(board, winner)
+    return winner
 
-start()
+i = 10001
+RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
+START_TIME = datetime.now()
+
+for i in range(i):
+    player_won = start()
+    if player_won.token == 'x':
+        RESULTS['playerX'] += 1
+    elif player_won.token == 'o':
+        RESULTS['playerO'] += 1
+    else:
+        RESULTS['cats'] += 1
+
+END_TIME = datetime.now()
+DIFF_TIME = timedelta.total_seconds(END_TIME - START_TIME)
+print('\nIt took {} seconds to run the game {} times\n'.format(DIFF_TIME, i))
+print(RESULTS)
+
+
+
