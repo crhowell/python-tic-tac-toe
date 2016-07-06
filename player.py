@@ -1,3 +1,5 @@
+import random
+
 class Player:
 
     def __init__(self, token):
@@ -11,3 +13,10 @@ class Player:
 
     def __str__(self):
         return '{}'.format(self.token.upper())
+
+
+class RandomAI(Player):
+
+    def move(self, board):
+        return random.choice(board.moves_remaining()) - 1
+

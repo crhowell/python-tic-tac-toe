@@ -1,5 +1,5 @@
 from board import Board
-from player import Player
+from player import Player, RandomAI
 
 
 def declare_winner(board, player):
@@ -14,12 +14,12 @@ def valid_move(board, move):
 
 
 def start():
-    players = [Player('x'), Player('o')]
+    players = [RandomAI('x'), RandomAI('o')]
     board = Board()
     winner = None
     while True:
         board.print_board()
-        board.print_moves_remaining()
+        print('Moves Left: ', board.moves_remaining())
         player = players[0]
         move = player.move(board)
         if valid_move(board, move):
