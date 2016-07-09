@@ -1,5 +1,10 @@
 # Python Tic-Tac-Toe
-A Python remake of the of the mob programmed, [Rogue.rb Tic-Tac-Toe](https://github.com/roguerb/tic-tac-toe)
+## Basic
+A slightly modified python version of:
+[Rogue.rb Tic-Tac-Toe](https://github.com/roguerb/tic-tac-toe)
+
+## Evolved
+My own, "evolved" Python version of Tic-Tac-Toe.
 
 ## Prerequisites
 - Python 3
