@@ -2,11 +2,15 @@ from board import Board
 from player import Player, RandomAI, OffensiveAI
 from datetime import datetime, timedelta
 
+
 def declare_winner(board, player):
     if board.has_won():
         print('Player {} wins!'.format(player))
+        return player
+
     else:
         print('This game sucked...')
+        return None
 
 
 def valid_move(board, move):
@@ -14,13 +18,12 @@ def valid_move(board, move):
 
 
 def start():
-    players = [RandomAI('x'), OffensiveAI('o')]
-    board = Board()
-
+    players = [Player('x'), OffensiveAI('o')]
+    board = Board(size=3)
     winner = None
     while True:
-        #board.print_board()
-        #print('Available Moves: ', board.moves_remaining())
+        board.print_board()
+        print('Available Moves: ', board.moves_remaining())
         player = players[0]
         move = player.move(board)
         if valid_move(board, move):
@@ -31,24 +34,26 @@ def start():
             players.append(players.pop(0))
         else:
             pass
-            #print('Not a valid move')
+            print('Not a valid move')
 
-    #board.print_board()
-    declare_winner(board, winner)
-    return winner
+    board.print_board()
+    return declare_winner(board, winner)
 
-i = 10001
+i = 1
 RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
 START_TIME = datetime.now()
 
 for i in range(i):
     player_won = start()
-    if player_won.token == 'x':
+
+    print('PLAYER WON: ', player_won)
+    if player_won is None:
+        RESULTS['cats'] += 1
+    elif player_won.token == 'x':
         RESULTS['playerX'] += 1
     elif player_won.token == 'o':
         RESULTS['playerO'] += 1
-    else:
-        RESULTS['cats'] += 1
+
 
 END_TIME = datetime.now()
 DIFF_TIME = timedelta.total_seconds(END_TIME - START_TIME)
