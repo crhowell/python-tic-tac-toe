@@ -1,6 +1,8 @@
-from board import Board
-from player import Player, RandomAI, OffensiveAI
 from datetime import datetime, timedelta
+
+from basic.board import Board
+
+from basic.player import Player, OffensiveAI
 
 
 def declare_winner(board, player):
