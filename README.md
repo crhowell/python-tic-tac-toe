@@ -12,7 +12,10 @@ My own, "evolved" Python version of Tic-Tac-Toe.
 ## To Play
 1. Open a command-line or terminal window.
 2. `cd` into the project directory
-3. type `python game.py`
+3. Type the following in the root project directory:
+    - `python game.py` for Basic Board and AI.
+    or
+    - `python egame.py` for Evolved Board and AI
 
 ## Game Instructions
 
