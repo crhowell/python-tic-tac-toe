@@ -1,4 +1,4 @@
-from basic.recipes import grouper
+from _core.recipes import grouper
 
 class Board:
     EMPTY = ' '

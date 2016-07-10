@@ -61,6 +61,3 @@ END_TIME = datetime.now()
 DIFF_TIME = timedelta.total_seconds(END_TIME - START_TIME)
 print('\nIt took {} seconds to run the game {} times\n'.format(DIFF_TIME, i))
 print(RESULTS)
-
-
-

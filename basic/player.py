@@ -31,7 +31,6 @@ class OffensiveAI(Player):
     def best_move(self, board, token):
         to_win = [state for state in board.win_states() if self.near_win(state, board, token)]
         to_block = [state for state in board.win_states() if self.near_win(state, board, self.other_player(token))]
-        print('toblock: ', to_block)
 
         if not to_win:
             if not to_block:
