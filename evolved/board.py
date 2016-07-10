@@ -14,6 +14,7 @@ class Board:
         self.WIN_STATES_LEFT = self.WIN_CONDITIONS
         self.AVAILABLE_MOVES = moves if moves is not None else self.initial_avail_moves()
         self.game_over = False
+        self.current_player = self.players.pop(0)
 
     def place_token(self, cell, token):
         new_board = list(self.board)
@@ -23,7 +24,8 @@ class Board:
                      size=self.board_size, total_moves=self.total_moves)
 
     def remove_move(self, move):
-        self.AVAILABLE_MOVES.remove(move)
+        if move in self.AVAILABLE_MOVES:
+            self.AVAILABLE_MOVES.remove(move)
 
     def moves_left(self):
         return len(self.AVAILABLE_MOVES)
@@ -37,6 +39,9 @@ class Board:
     def size(self):
         return len(self.board)
 
+    def line_length(self):
+        return self.board_size
+
     def line(self, indexes):
         return ''.join([self.board[i] for i in indexes])
 
@@ -46,11 +51,9 @@ class Board:
                 self.win_case(player.token)
             ] for state in self.WIN_STATES_LEFT)
 
-        print('has_won: ', self.game_over)
         return self.game_over
 
     def win_case(self, token):
-        print('token: {}'.format(token*self.board_size))
         return token * self.board_size
 
     def initial_avail_moves(self):
@@ -61,6 +64,12 @@ class Board:
         for item in list(grouper(self.board, self.board_size)):
             print(*item, sep=' | ')
         print('\n', '-' *20, '\n')
+
+    def moves_made(self):
+        return self.total_moves
+
+    def win_conditions(self):
+        return self.WIN_CONDITIONS
 
     def fill_win_states(self, num):
         """
