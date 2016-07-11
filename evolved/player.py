@@ -10,7 +10,6 @@ class Player:
         return turn == self.token
 
     def move(self, board):
-        print('Available Moves: ', board.AVAILABLE_MOVES)
         return int(input('{} > '.format(self.token)))
 
     def __str__(self):
@@ -20,7 +19,6 @@ class Player:
 class RandomAI(Player):
 
     def move(self, board):
-        print('RANDOM AVAIL: ', board.AVAILABLE_MOVES)
         return random.choice(board.AVAILABLE_MOVES)
 
 
@@ -48,38 +46,40 @@ class EvolvedAI(Player):
         if not best:
             best = self.best_move(board)
 
-        print('AVAIL MOVES: ', board.AVAILABLE_MOVES)
-        print('EVOLV: TRYING: ', best, ' from: ', self.pattern_choice)
         return best
 
     def next_player(self, board):
-        return board.players[0]
+        return str(board.players[1])
 
     def near_win(self, state, board, token):
         return board.line(state).count(token) == board.line_length() - 1 and board.EMPTY in board.line(state)
 
+    def check_line(self, line, empty=None):
+        return [not (cell == self.token or cell == empty) for cell in line]
+
     def blocked_me(self, board):
         line = board.line(self.pattern_choice)
-        blocked = all(l == self.token or l == board.EMPTY for l in line)
-        return not blocked
+        check = self.check_line(line, board.EMPTY)
+        return any(check)
 
     def best_move(self, board):
-        print('pattern', self.pattern_choice)
-        best = self.choice(board)
 
+        best = self.choice(board)
+        print('pattern', self.pattern_choice)
+        print('chose best move of: ', best)
         if board.valid_move(best):
             if self.blocked_me(board):
-                print('trying to block? ')
+                print('Blocked.. ')
                 self.pattern_choice = None
                 best = self.choice(board)
             else:
                 print('not blocked')
-                if len(board.AVAILABLE_MOVES) < 2:
+                if len(board.AVAILABLE_MOVES) <= 2:
                     best = board.AVAILABLE_MOVES[0]
         else:
             best = self.choice(board)
 
-        print('returning best of: ', best)
+
         return best
 
     def choice(self, board):
@@ -93,8 +93,8 @@ class EvolvedAI(Player):
         return choice
 
     def blocking_move(self, board):
-        to_block = [state for state in board.WIN_CONDITIONS if self.near_win(state, board, self.next_player(board))]
+        to_block = [state for state in self.win_states if self.near_win(state, board, self.next_player(board))]
         if not to_block:
             return None
         else:
-            return to_block[0][board.line(to_block[0]).index(board.EMPTY)] + 1
+            return to_block[0][board.line(to_block[0]).index(board.EMPTY)]

@@ -3,13 +3,13 @@ from evolved.board import Board
 from evolved.player import Player, RandomAI, EvolvedAI
 
 
-def start_game(board, players):
+def start_game(board):
     while not board.game_over:
         if not board.moves_left() > 0:
             break
 
         board.print_board()
-        player = players[0]
+        player = board.current_move()
         move = player.move(board)
         winner = None
         if board.valid_move(move):
@@ -18,7 +18,7 @@ def start_game(board, players):
             if board.has_won(player):
                 winner = player
                 break
-            players.append(players.pop(0))
+            board.switch_players()
         else:
             print('Not a valid move, try again...')
 
@@ -31,9 +31,9 @@ RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
 START_TIME = datetime.now()
 
 for _ in range(1000):
-    board = Board()
     players = [EvolvedAI('x'), RandomAI('o')]
-    winner = start_game(board, players)
+    board = Board(players)
+    winner = start_game(board)
     if winner is None:
         RESULTS['cats'] += 1
     else:

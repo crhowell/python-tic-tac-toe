@@ -4,46 +4,30 @@ from _core.recipes import grouper
 class Board:
     EMPTY = ' '
 
-    def __init__(self, board=None, moves=None, **kwargs):
+    def __init__(self, players, **kwargs):
         self.WIN_CONDITIONS = []
         self.total_moves = 0 if 'total_moves' not in kwargs else kwargs['total_moves']
-        self.players = ['x', 'o'] if 'players' not in kwargs else kwargs['players']
-        self.board_size = 3 if 'size' not in kwargs else kwargs['size']
-        self.board = board if board is not None else self.build_a_board(self.board_size)
-        self.fill_win_states(self.board_size)
-        self.WIN_STATES_LEFT = self.WIN_CONDITIONS
-        self.AVAILABLE_MOVES = moves if moves is not None else self.initial_avail_moves()
+        self.players = players
+        self.dimension = 3 if 'dimension' not in kwargs else kwargs['dimension']
+        self.board = (self.build_a_board(self.dimension)
+                      if 'board' not in kwargs else kwargs['board'])
         self.game_over = False
-        self.current_player = self.players.pop(0)
+        self.fill_win_states(self.dimension)
+        self.WIN_STATES_LEFT = self.WIN_CONDITIONS
+        self.AVAILABLE_MOVES = (self.init_moves() if 'moves' not in kwargs
+                                else kwargs['moves'])
+        self.current_player = self.players[0]
 
     def place_token(self, cell, token):
         new_board = list(self.board)
-        new_board[cell-1] = token
+        new_board[cell - 1] = token
         self.total_moves += 1
-        return Board(new_board, self.AVAILABLE_MOVES,
-                     size=self.board_size, total_moves=self.total_moves)
+        return Board(self.players, board=new_board, moves=self.AVAILABLE_MOVES,
+                     dimension=self.dimension, total_moves=self.total_moves)
 
     def remove_move(self, move):
         if move in self.AVAILABLE_MOVES:
             self.AVAILABLE_MOVES.remove(move)
-
-    def moves_left(self):
-        return len(self.AVAILABLE_MOVES)
-
-    def valid_move(self, move):
-        return move in self.AVAILABLE_MOVES and self.pos(move) == self.EMPTY
-
-    def pos(self, move):
-        return self.board[move-1]
-
-    def size(self):
-        return len(self.board)
-
-    def line_length(self):
-        return self.board_size
-
-    def line(self, indexes):
-        return ''.join([self.board[i] for i in indexes])
 
     def has_won(self, player):
         if self.total_moves >= 3:
@@ -53,23 +37,54 @@ class Board:
 
         return self.game_over
 
-    def win_case(self, token):
-        return token * self.board_size
-
-    def initial_avail_moves(self):
-        return [move+1 for move in range(self.size())]
-
     def print_board(self):
-        print('\n', '-'*20, '\n')
-        for item in list(grouper(self.board, self.board_size)):
+        print('\n', '-' * 20, '\n')
+        for item in list(grouper(self.board, self.dimension)):
             print(*item, sep=' | ')
-        print('\n', '-' *20, '\n')
+        print('\n', '-' * 20, '\n')
+
+    def current_move(self):
+        return self.players[0]
+
+    def win_case(self, token):
+        return token * self.dimension
+
+    def line_size(self):
+        return self.dimension
+
+    def moves_left(self):
+        return len(self.AVAILABLE_MOVES)
+
+    def valid_move(self, move):
+        return (False if move not in self.AVAILABLE_MOVES else
+                self.cell(move) == self.EMPTY)
+
+    def cell(self, move):
+        return self.board[move-1]
+
+    def pos(self, move):
+        return self.board.index(move-1)
 
     def moves_made(self):
         return self.total_moves
 
     def win_conditions(self):
         return self.WIN_CONDITIONS
+
+    def switch_players(self):
+        self.players.append(self.players.pop(0))
+
+    def size(self):
+        return len(self.board)
+
+    def line_length(self):
+        return self.dimension
+
+    def line(self, moves):
+        return ''.join(self.cell(move) for move in moves)
+
+    def init_moves(self):
+        return [move + 1 for move in range(self.size())]
 
     def fill_win_states(self, num):
         """
@@ -79,7 +94,7 @@ class Board:
             :param num: size of the board
             :return: None
         """
-        cells = [i for i in range(num * num)]
+        cells = [i + 1 for i in range(num * num)]
         self.build_horizontal_states(cells, num)
         self.build_vertical_states(cells, num)
         self.build_diag_states(cells, num)
@@ -94,7 +109,7 @@ class Board:
             :return: None
         """
         ltr = [cells[0] + (x * (num + 1)) for x in range(0, num)]
-        rtl = [cells[num - 1] + (x * cells[num - 1]) for x in range(0, num)]
+        rtl = [cells[num - 1] + (x * cells[num - 2]) for x in range(0, num)]
         self.WIN_CONDITIONS.extend([ltr])
         self.WIN_CONDITIONS.extend([rtl])
 
@@ -127,6 +142,6 @@ class Board:
             Creates an empty board of (size)
 
             :param size: size of the board
-            :return: list() of size with EMPTY values
+            :return: A new EMPTY board
         """
         return [self.EMPTY for i in range(size * size)]
