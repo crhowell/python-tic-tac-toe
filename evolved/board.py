@@ -29,10 +29,10 @@ class Board:
         if move in self.AVAILABLE_MOVES:
             self.AVAILABLE_MOVES.remove(move)
 
-    def has_won(self, player):
+    def has_won(self):
         if self.total_moves >= 3:
             self.game_over = any(self.line(state) in [
-                self.win_case(player.token)
+                self.win_case(self.current_player.token)
             ] for state in self.WIN_STATES_LEFT)
 
         return self.game_over
@@ -53,10 +53,14 @@ class Board:
         return self.dimension
 
     def moves_left(self):
-        return len(self.AVAILABLE_MOVES)
+        return self.AVAILABLE_MOVES
 
     def valid_move(self, move):
-        return (False if move not in self.AVAILABLE_MOVES else
+        moves_left = self.moves_left()
+        if not moves_left:
+            self.game_over = False
+
+        return (False if move not in moves_left else
                 self.cell(move) == self.EMPTY)
 
     def cell(self, move):

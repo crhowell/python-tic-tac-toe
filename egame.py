@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 from evolved.board import Board
-from evolved.player import Player, RandomAI, EvolvedAI
+from evolved.player import Player, RandomAI, EvolvedAI, MinimaxAI
 
 
 def start_game(board):
     while not board.game_over:
-        if not board.moves_left() > 0:
+        if not len(board.moves_left()) > 0:
             break
 
         board.print_board()
@@ -15,7 +15,7 @@ def start_game(board):
         if board.valid_move(move):
             board = board.place_token(move, player.token)
             board.remove_move(move)
-            if board.has_won(player):
+            if board.has_won():
                 winner = player
                 break
             board.switch_players()
@@ -31,7 +31,7 @@ RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
 START_TIME = datetime.now()
 
 for _ in range(1000):
-    players = [EvolvedAI('x'), RandomAI('o')]
+    players = [Player('x'), MinimaxAI('o')]
     board = Board(players)
     winner = start_game(board)
     if winner is None:
