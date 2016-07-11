@@ -27,10 +27,11 @@ def start_game(board):
     return winner
 
 
-RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
+RESULTS = {'X': 0, 'O': 0, 'cats': 0}
 START_TIME = datetime.now()
 
-for _ in range(1000):
+i = 100
+for _ in range(i):
     players = [RandomAI('x'), EvolvedAI('o')]
     board = Board(players)
     winner = start_game(board)
@@ -38,15 +39,15 @@ for _ in range(1000):
         RESULTS['cats'] += 1
     else:
         if winner.token is 'x':
-            RESULTS['playerX'] += 1
+            RESULTS['X'] += 1
 
         if winner.token is 'o':
-            RESULTS['playerO'] += 1
+            RESULTS['O'] += 1
 
 
 END_TIME = datetime.now()
 DIFF_TIME = timedelta.total_seconds(END_TIME - START_TIME)
-print('\nIt took {} seconds to run the game {} times\n'.format(DIFF_TIME, 1))
+print('\nIt took {} seconds to run the game {} times\n'.format(DIFF_TIME, i))
 print(RESULTS)
 
 

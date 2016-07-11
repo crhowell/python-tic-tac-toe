@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from basic.board import Board
 
-from basic.player import Player, OffensiveAI
+from basic.player import Player, OffensiveAI, RandomAI
 
 
 def declare_winner(board, player):
@@ -20,7 +20,7 @@ def valid_move(board, move):
 
 
 def start():
-    players = [Player('x'), OffensiveAI('o')]
+    players = [RandomAI('x'), OffensiveAI('o')]
     board = Board(size=3)
     winner = None
     while True:
@@ -41,11 +41,11 @@ def start():
     board.print_board()
     return declare_winner(board, winner)
 
-i = 1
+i = 100
 RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
 START_TIME = datetime.now()
 
-for i in range(i):
+for _ in range(i):
     player_won = start()
 
     print('PLAYER WON: ', player_won)
