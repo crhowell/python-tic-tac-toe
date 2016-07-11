@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from evolved.board import Board
-from evolved.player import Player, RandomAI, EvolvedAI, MinimaxAI
+from evolved.player import Player, RandomAI, EvolvedAI
 
 
 def start_game(board):
@@ -31,7 +31,7 @@ RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
 START_TIME = datetime.now()
 
 for _ in range(1000):
-    players = [Player('x'), MinimaxAI('o')]
+    players = [RandomAI('x'), EvolvedAI('o')]
     board = Board(players)
     winner = start_game(board)
     if winner is None:
