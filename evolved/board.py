@@ -75,6 +75,9 @@ class Board:
     def win_conditions(self):
         return self.WIN_CONDITIONS
 
+    def get_players(self):
+        return self.players
+
     def switch_players(self):
         self.players.append(self.players.pop(0))
 

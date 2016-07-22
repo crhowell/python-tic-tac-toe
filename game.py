@@ -20,7 +20,7 @@ def valid_move(board, move):
 
 
 def start():
-    players = [RandomAI('x'), OffensiveAI('o')]
+    players = [Player('x'), OffensiveAI('o'), ]
     board = Board(size=3)
     winner = None
     while True:
@@ -41,7 +41,7 @@ def start():
     board.print_board()
     return declare_winner(board, winner)
 
-i = 100
+i = 1
 RESULTS = {'playerX': 0, 'playerO': 0, 'cats': 0}
 START_TIME = datetime.now()
 
