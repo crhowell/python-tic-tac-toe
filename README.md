@@ -5,6 +5,7 @@ A slightly modified python version of:
 
 ## Evolved
 My own, "evolved" Python version of Tic-Tac-Toe.
+Intended to be a more evolved version of the OffensiveAI, but currently plays at a less than adequate level in comparison to OffensiveAI.
 
 ## Prerequisites
 - Python 3
