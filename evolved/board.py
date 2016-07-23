@@ -30,7 +30,7 @@ class Board:
             self.AVAILABLE_MOVES.remove(move)
 
     def has_won(self):
-        if self.total_moves >= 3:
+        if self.total_moves >= self.dimension:
             self.game_over = any(self.line(state) in [
                 self.win_case(self.current_player.token)
             ] for state in self.WIN_STATES_LEFT)

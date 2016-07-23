@@ -43,8 +43,9 @@ class OffensiveAI(Player):
         return best if best else random.choice(board.moves_left())
 
     def best_move(self, board, token):
-        to_win = [state for state in board.win_conditions() if self.near_win(state, board, token)]
-        to_block = [state for state in board.win_conditions() if self.near_win(state, board, self.next_player(board))]
+        win_conds = board.win_conditions()
+        to_win = [state for state in win_conds if self.near_win(state, board, token)]
+        to_block = [state for state in win_conds if self.near_win(state, board, self.next_player(board))]
 
         if not to_win:
             if not to_block:
@@ -58,12 +59,40 @@ class OffensiveAI(Player):
         return board.line(state).count(token) == board.line_length() - 1 and board.EMPTY in board.line(state)
 
 
-class EvolvedAI(Player):
-
+class EvolvedAI(OffensiveAI):
+    
     def __init__(self, token, **kwargs):
-        Player.__init__(self, token)
+        OffensiveAI.__init__(self, token)
         self.win_states = None
+        self.corners = []
         self.pattern_choice = []
+
+    def move(self, board):
+        if self.win_states is None:
+            self.win_states = board.win_conditions()
+            self.set_corners(board.line_size())
+
+        best = self.best_move(board, self.token)
+        return best if best else self.from_pattern(board)
+
+    def from_pattern(self, board):
+        if board.moves_made() <= board.line_size():
+            if self.corners:
+                self.pattern_choice = self.corners
+                self.corners = []
+            else:
+                self.pick_pattern(board)
+        
+        if not self.pattern_choice or self.pattern_choice is None:
+            self.pick_pattern(board)
+
+        choice = random.choice(self.pattern_choice)
+        moves_left = board.moves_left()
+
+        if choice not in moves_left:
+            self.pattern_choice.remove(choice)
+            self.from_pattern(board)
+        return choice
 
     def pick_pattern(self, board):
         if self.win_states is None:
@@ -94,72 +123,13 @@ class EvolvedAI(Player):
         dual.extend(p2)
         return dual
 
-
-    def move(self, board):
-        best = None
-        if board.moves_made() >= board.line_length():
-            best = self.blocking_move(board)
-
-        if not best:
-            best = self.best_move(board)
-
-        return best
-
-    def next_player(self, board):
-        player_list = board.get_players()
-        if player_list:
-            idx = player_list.index(board.current_move()) + 1
-            size = len(player_list)
-            if idx == size:
-                return player_list[size - idx].token
-            else:
-                return player_list[idx].token
-        else:
-            return None
-
-    def near_win(self, state, board, token):
-        return board.line(state).count(token) == board.line_length() - 1 and board.EMPTY in board.line(state)
-
-    def check_line(self, line, empty=None):
-        return [not (cell == self.token or cell == empty) for cell in line]
-
-    def blocked_me(self, board):
-        line = board.line(self.pattern_choice)
-        check = self.check_line(line, board.EMPTY)
-        return any(check)
-
-    def best_move(self, board):
-        best = self.choice(board)
-        if board.valid_move(best):
-            if self.blocked_me(board):
-                self.pattern_choice = None
-                best = self.choice(board)
-            else:
-                if len(board.AVAILABLE_MOVES) <= 2:
-                    best = board.AVAILABLE_MOVES[0]
-        else:
-            best = self.choice(board)
-
-        return best
-
-    def choice(self, board):
-        if not self.pattern_choice or self.pattern_choice is None:
-            self.pick_pattern(board)
-
-        print('PATT: ', self.pattern_choice)
-        index = random.choice(range(len(self.pattern_choice)))
-        print('index: ', index)
-        choice = self.pattern_choice[index]
-        print('choice: ', choice)
-        self.pattern_choice.pop(index)
-        print('movesLeft: ', board.moves_left())
-        if choice not in board.moves_left():
-            self.choice(board)
-        return choice
-
-    def blocking_move(self, board):
-        to_block = [state for state in self.win_states if self.near_win(state, board, self.next_player(board))]
-        if not to_block:
-            return None
-        else:
-            return to_block[0][board.line(to_block[0]).index(board.EMPTY)]
+    def set_corners(self, d):
+        edges = []
+        if self.win_states:
+            edges.append(self.win_states[0][0])
+            edges.append(self.win_states[d-1][d-1])
+            edges.append(self.win_states[0][d-1])
+            edges.append(self.win_states[d-1][0])
+            #self.win_states[0]
+            #self.win_states[d]
+            self.corners.extend(edges)
