@@ -1,12 +1,35 @@
 # Python Tic-Tac-Toe
-## Basic
+## Basic (game.py)
 A slightly modified python version of:
 [Rogue.rb Tic-Tac-Toe](https://github.com/roguerb/tic-tac-toe)
 
-## Evolved
+## Evolved (egame.py)
 My own, "evolved" Python version of Tic-Tac-Toe.
-Intended to be a more evolved version of the OffensiveAI, but currently plays at a less than adequate level in comparison to OffensiveAI.
+Intended to be a more evolved version of the OffensiveAI.
 
+Board dimensions can be changed, so "3 in-a-row" can now be "10 in-a-row".
+    - Default size is 3, which makes a 3x3 board.
+    - Board sizes will always be proportionate.
+
+```python
+#egame.py
+
+board = Board(players, dimension=3)
+```
+
+Players can be swapped to any of the following:
+
+1. Player() is a Human Player
+2. RandomAI() aka "dumb AI", makes random decisions.
+3. OffensiveAI() will go for blocks and wins, but still makes random decisions
+4. EvolvedAI() inherits OffensiveAI abilities, but doesnt make random decisions
+
+```python
+#egame.py
+
+players = [Player('x'), EvolvedAI('o')]
+```
+	
 ## Prerequisites
 - Python 3
 
