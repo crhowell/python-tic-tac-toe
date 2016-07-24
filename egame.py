@@ -31,10 +31,17 @@ def start_game(board):
 RESULTS = {'X': 0, 'O': 0, 'cats': 0}
 START_TIME = datetime.now()
 
-i = 1
+i = 1 # How many games to cycle through.
 for _ in range(i):
     players = [Player('x'), EvolvedAI('o')]
+    # Players can be swapped to any of the following:
+    # Player() : is a Human Player
+    # RandomAI() : aka "dumb AI", makes random decisions.
+    # OffensiveAI() : Will go for blocks and wins, but still makes random decisions
+    # EvolvedAI() : Inherits OffensiveAI, but doesnt make random decisions
+
     board = Board(players, dimension=3)
+    # dimension is the size of the board. 3 equates to 3x3.
     winner = start_game(board)
     if winner is None:
         RESULTS['cats'] += 1
